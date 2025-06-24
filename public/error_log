@@ -1,0 +1,2 @@
+[04-Dec-2023 14:14:30 Africa/Nairobi] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home3/dianaroselogisti/erp1/vendor/dompdf/dompdf/src/Css/Stylesheet.php on line 975
+[23-Jan-2024 15:36:54 Africa/Nairobi] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home3/dianaroselogisti/erp1/vendor/dompdf/dompdf/src/Css/Style.php on line 866

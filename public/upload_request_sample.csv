@@ -1,0 +1,4 @@
+trip_ref_no,truck_plate_number,narration,currency_type,unit_price,quantity,total
+GL-BRIDGE2312-54,T731 EAK,Parking DRC,USD,400000,21,8400000
+BL-BRIDGE2312-53,T770 DNE,Parking Zambia two days,ZMW,200000,23,4600000
+BL-BRIDGE2312-52,T597 DMZ,parking Mbezi,TZS,300000,2,600000
