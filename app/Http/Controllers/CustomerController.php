@@ -176,7 +176,7 @@ class CustomerController extends Controller
 
             $phone = $credentials->phone_number;
             $new_phone = str_replace(' ', '', $phone);
-            dd($this->sendSMS($new_phone, $message));
+            $this->sendSMS($new_phone, $message);
 
             DB::commit(); // ✅ All operations succeeded
 
