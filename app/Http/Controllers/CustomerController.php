@@ -172,12 +172,11 @@ class CustomerController extends Controller
             $credentials->update();
 
 
-            $message = "Hi {$customer->first_name}, your ZoeSoma account has been created. \n
-            Username: {$username}, \n
-            Password: {$password}. \n
-            Please change your password after login.";
+            $message = "Hi {$customer->first_name}, your ZoeSoma account has been created. \nUsername: {$username},\nPassword: {$password}. \nPlease change your password after login.";
 
-            dd($this->sendSMS($credentials->phone_number, $message));
+            $phone = $credentials->phone_number;
+            $new_phone = str_replace(' ', '', $phone);
+            dd($this->sendSMS($new_phone, $message));
 
             DB::commit(); // ✅ All operations succeeded
 
