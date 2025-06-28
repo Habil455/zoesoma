@@ -177,7 +177,7 @@ class CustomerController extends Controller
             Password: {$password}. \n
             Please change your password after login.";
 
-            $this->sendSMS($credentials->phone_number, $message);
+            dd($this->sendSMS($credentials->phone_number, $message));
 
             DB::commit(); // ✅ All operations succeeded
 
