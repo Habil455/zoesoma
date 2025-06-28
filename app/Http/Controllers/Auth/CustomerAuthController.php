@@ -23,10 +23,11 @@ class CustomerAuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('username', 'password');
 
         if (Auth::guard('customer')->attempt($credentials)) {
             $request->session()->regenerate();
+
             return redirect()->intended('/customer/dashboard');
         }
 

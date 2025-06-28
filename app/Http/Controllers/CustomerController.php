@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SysHelpers;
 use App\Models\Customer;
 use App\Models\CustomerBeneficiary;
 use App\Models\IdentificationType;
@@ -13,7 +14,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -96,6 +100,11 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
+            $lastCustomer = Customer::orderBy('id', 'desc')->first();
+            $nextNumber = $lastCustomer ? $lastCustomer->id + 1 : 1;
+            $username = 'CUS' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            $password  = Str::random(8);
+
             $customer = new Customer();
             $customer->first_name = $request->fname;
             $customer->middle_name = $request->mname;
@@ -111,7 +120,9 @@ class CustomerController extends Controller
             $customer->id_type = $request->idtype;
             $customer->id_number = $request->cust_id_no;
             $customer->created_by = auth()->user()->id;
-            $customer->type = $request->customer_type ?? 1; // Default to 1 if not set
+            $customer->type = $request->customer_type ?? 1;// Default to 1 if not set
+            // creating the customer credentials
+
             $customer->save();
 
             $total_beneficiaries = count($request->moreBeneficiaries);
@@ -154,11 +165,26 @@ class CustomerController extends Controller
             $insurance_application->created_by = Auth::user()->id;
             $insurance_application->save();
 
+            // Create user credentials for the customer
+            $credentials = Customer::find($customer->id);
+            $credentials->username = $username;
+            $credentials->password = Hash::make($password);
+            $credentials->update();
+
+
+            $message = "Hi {$customer->first_name}, your ZoeSoma account has been created. \n
+            Username: {$username}, \n
+            Password: {$password}. \n
+            Please change your password after login.";
+
+            $this->sendSMS($credentials->phone_number, $message);
+
             DB::commit(); // ✅ All operations succeeded
 
             return back()->with('success', 'Customer Created Successfully');
         } catch (\Exception $e) {
             DB::rollBack(); // Something went wrong, rollback everything
+            dd($e);
             return back()->with('error', 'Failed to create customer: ' . $e->getMessage());
         }
 
@@ -243,4 +269,39 @@ class CustomerController extends Controller
         $data['regions'] = Region::get();
         return view('customers.public_sector.create', $data);
     }
+
+
+    public static function sendSMS($phone, $message){
+        // return Http::withOptions([
+        //     'verify' => false, // Disable SSL verification
+        // ])->post('https://mshastra.com/sendsms_api_json.aspx', [
+        //     'user' => 'ZOESOMA',
+        //     'pwd' => 'p9s_e1_6',
+        //     'senderid' => 'Mobishastra',
+        //     'mobileno' => $phone,
+        //     'msgtext' => $message,
+        //     'CountryCode' => '+255',
+        // ]);
+
+        $baseUrl = 'https://mshastra.com/sendurl.aspx';
+        $query = [
+            'user'       => 'ZOESOMA',
+            'pwd'        => 'p9s_e1_6',
+            'senderid'   => 'Mobishastra',
+            'mobileno'   => $phone,
+            'msgtext'    => $message,
+            'CountryCode'=> '+255',
+        ];
+
+        // disable SSL verification if needed (equivalent to curl -k)
+        $response = Http::withOptions(['verify' => false])
+                        ->get($baseUrl, $query);
+
+        if ($response->successful()) {
+            return 'SMS sent: ' . $response->body();
+        }
+
+        return 'Error: ' . $response->status() . ' - ' . $response->body();
+    }
+
 }

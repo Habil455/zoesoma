@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\FinancialLogs;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class SysHelpers
 {
@@ -316,11 +317,11 @@ class SysHelpers
         if (!$process) {
             return false;
         }
-        
+
         $level = ApprovalLevel::where('role_id', $role_id)
         ->where('approval_id', $process->id)
         ->first();
-        
+
 
 
         return $level ? $level->level_name : 0;
@@ -352,5 +353,17 @@ class SysHelpers
     }
 
 
+    public static function sendSMS($phone, $message){
+        return Http::withOptions([
+            'verify' => false, // Disable SSL verification
+        ])->post('https://mshastra.com/sendurl.aspx', [
+            'user' => 'ZOESOMA',
+            'pwd' => 'p9s_e1_6',
+            'senderid' => 'Mobishastra',
+            'mobileno' => $phone,
+            'msgtext' => $message,
+            'CountryCode' => '+255',
+        ]);
+    }
 
 }

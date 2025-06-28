@@ -264,7 +264,11 @@
         {{-- / Page loader --}}
 
         {{-- Left sidebar --}}
-        @include('layouts.shared.left-sidebar')
+        @if (Auth::user())
+            @include('layouts.shared.left-sidebar')
+        @else
+            @include('layouts.shared.customer.left-sidebar')
+        @endif
         {{-- /Left sidebar --}}
 
         {{-- main content --}}

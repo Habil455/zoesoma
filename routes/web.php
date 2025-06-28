@@ -132,4 +132,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/update-password', [ProfileController::class, 'save_new_password'])->name('save_new_password');
 });
 
+Route::prefix('/customer')->group(__DIR__ . '/customer/customers.php');
+
 require __DIR__.'/auth.php';

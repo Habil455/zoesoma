@@ -70,7 +70,7 @@ Route::prefix('customer')->group(function () {
     Route::get('/login', [CustomerAuthController::class, 'showLoginForm'])
                 ->name('customer.login');
 
-    Route::post('login', [CustomerAuthController::class, 'login']);
+    Route::post('login', [CustomerAuthController::class, 'login'])->name('customer-login');
     Route::get('/', [CustomerAuthController::class, 'showLoginForm']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])

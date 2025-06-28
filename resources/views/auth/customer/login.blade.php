@@ -127,7 +127,8 @@
                 <div class="content d-flex justify-content-center align-items-center">
 
                     <!-- Login form -->
-                    <form class="login-form" action="index.html">
+                    <form class="login-form" action="{{ route('customer-login') }}" method="post" autocomplete="off">
+                        @csrf
                         <div class="">
                             <div class="card" style="background: #ffffff8e">
                                 <div class="card-body ">
@@ -138,12 +139,23 @@
                                         </div>
                                         <h5 class="mb-0">Welcome Back Customer!!!</h5>
                                         <span class="d-block text-muted">Enter your credentials below</span>
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger border-0 alert-dismissible fade show mb-3">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                         <span class="fw-semibold">Oh snap! {{$error}}</span>
+                                                    @endforeach
+                                                </ul>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="alert"></button>
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label">Username</label>
                                         <div class="form-control-feedback form-control-feedback-start">
-                                            <input type="text" class="form-control" placeholder="Enter Username">
+                                            <input type="text" name="username" class="form-control" placeholder="Enter Username">
                                             <div class="form-control-feedback-icon">
                                                 <i class="ph-user-circle text-muted"></i>
                                             </div>
@@ -153,7 +165,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Password</label>
                                         <div class="form-control-feedback form-control-feedback-start">
-                                            <input type="password" class="form-control" placeholder="•••••••••••">
+                                            <input type="password" name="password" class="form-control" placeholder="•••••••••••">
                                             <div class="form-control-feedback-icon">
                                                 <i class="ph-lock text-muted"></i>
                                             </div>

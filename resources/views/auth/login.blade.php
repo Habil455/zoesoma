@@ -157,7 +157,7 @@
                                                     <div class="alert alert-danger border-0 alert-dismissible fade show mb-3">
                                                         <ul>
                                                             @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
+                                                                <span class="fw-semibold">Oh snap! {{$error}}</span>
                                                             @endforeach
                                                         </ul>
                                                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>

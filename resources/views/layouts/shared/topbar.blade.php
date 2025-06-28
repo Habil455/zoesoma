@@ -86,12 +86,33 @@
             <li class="nav-item nav-item-dropdown-lg dropdown">
                 <a href="#" class="navbar-nav-link align-items-center rounded-pill p-1" data-bs-toggle="dropdown">
                     <div class="status-indicator-container">
-                        <img src="{{ auth()->user()->photo ? asset('assets/img/user.jpg') : asset('/img/user.jpg') }}" class="w-32px h-32px rounded-pill" alt="">
+
+                        @if (auth()->user())
+                            @if (auth()->user()->photo)
+                                <img src="{{ asset('storage/' . auth()->user()->photo) }}" class="w-32px h-32px rounded-pill" alt="">
+                            @else
+                                <img src="{{ asset('/img/user.jpg') }}" class="w-32px h-32px rounded-pill" alt="">
+                            @endif
+
+                        @else
+                             {{-- For customer --}}
+                            @if(Auth::guard('customer')->user()->photo)
+                                <img src="{{ asset('storage/' . Auth::guard('customer')->user()->photo) }}" class="w-32px h-32px rounded-pill" alt="">
+                            @else
+                                <img src="{{ asset('/img/user.jpg') }}" class="w-32px h-32px rounded-pill" alt="">
+                            @endif
+                        {{-- <img src="{{ auth()->user()->photo ? asset('assets/img/user.jpg') : asset('/img/user.jpg') }}" class="w-32px h-32px rounded-pill" alt="">  --}}
+                        @endif
 
                         <span class="status-indicator bg-main"></span>
                     </div>
                     <span class="d-none d-lg-inline-block mx-lg-2">
+                        @if (auth()->user())
                         {{ auth()->user()->fname. ' ' .auth()->user()->lname }}
+                        @else
+                        {{ Auth::guard('customer')->user()->first_name. ' ' .Auth::guard('customer')->user()->last_name }}
+
+                        @endif
                     </span>
                 </a>
 
