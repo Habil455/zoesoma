@@ -102,7 +102,7 @@ class CustomerController extends Controller
         try {
             $lastCustomer = Customer::orderBy('id', 'desc')->first();
             $nextNumber = $lastCustomer ? $lastCustomer->id + 1 : 1;
-            $username = 'CUS' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            $username = $request->fname . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
             $password  = Str::random(8);
 
             $customer = new Customer();
