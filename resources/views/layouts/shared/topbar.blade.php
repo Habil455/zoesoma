@@ -12,11 +12,11 @@
         </div>
 
         <ul class="nav hstack gap-sm-1 flex-row justify-content-end order-1 order-lg-2">
-            <li class="nav-item d-lg-none">
+            {{-- <li class="nav-item d-lg-none">
                 <a href="#navbar_search" class="navbar-nav-link navbar-nav-link-icon rounded-pill" data-bs-toggle="collapse">
                     <i class="ph-magnifying-glass"></i>
                 </a>
-            </li>
+            </li> --}}
 
             {{-- <li class="nav-item nav-item-dropdown-lg dropdown">
                 <a href="#" class="navbar-nav-link navbar-nav-link-icon rounded-pill" data-bs-toggle="dropdown">
@@ -89,7 +89,9 @@
 
                         @if (auth()->user())
                             @if (auth()->user()->photo)
-                                <img src="{{ asset('storage/' . auth()->user()->photo) }}" class="w-32px h-32px rounded-pill" alt="">
+                                {{-- <img src="{{ asset('storage/' . auth()->user()->photo) }}" class="w-32px h-32px rounded-pill" alt="">
+                                 --}}
+                                 <img src="{{ asset('/img/user.jpg') }}" class="w-32px h-32px rounded-pill" alt="">
                             @else
                                 <img src="{{ asset('/img/user.jpg') }}" class="w-32px h-32px rounded-pill" alt="">
                             @endif
@@ -129,6 +131,7 @@
 
                     <div class="dropdown-divider"></div>
 
+                    @if (auth()->user())
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); this.closest('form').submit();">
@@ -136,6 +139,15 @@
                             Logout
                         </a>
                     </form>
+                    @else
+                    <form action="{{ route('customer.logout') }}" method="POST">
+                        @csrf
+                        <a href="{{ route('customer.logout') }}" class="dropdown-item" onclick="event.preventDefault(); this.closest('form').submit();">
+                            <i class="ph-sign-out me-2"></i>
+                            Logout
+                        </a>
+                    </form>
+                    @endif
                 </div>
             </li>
         </ul>

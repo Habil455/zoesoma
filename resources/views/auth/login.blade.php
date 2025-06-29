@@ -122,7 +122,7 @@
     <div class="page-content login-cover">
         <div class="content-wrapper">
             <div class="content-inner">
-                <div class="content d-flex align-items-center walpic">
+                <div class="content d-flex justify-content-center align-items-center">
 
                     <div class="col-md-7 col-12 offset-md-2">
                         <div class="rounded-0 mb-0">
@@ -136,7 +136,7 @@
 
                                         <div class="border-bottom-main mb-0 pt-4">
                                             <div class="text-center mb-4 mt-2">
-                                                <img src="{{ asset('img/new_zoesoma.png.png') }}" class="img-fluid" style="height: 13.2em" alt="logo">
+                                                <img src="{{ asset('img/new_zoesoma.png.png') }}" class="img-fluid" style="height: 10.2em" alt="logo">
                                             </div>
 
                                             @if (session()->has('password_set') && session('password_set'))
@@ -166,7 +166,7 @@
                                             @endif
 
                                             <div class="mb-3">
-                                                <label class="form-label text-main font-weight-bold">Username</label>
+                                                {{-- <label class="form-label text-main font-weight-bold">Username</label> --}}
                                                 <div class="form-control-feedback form-control-feedback-start">
                                                     <input class="form-control @if ($errors->has('emp_id')) is-invalid @endif" name="user_code" type="text" id="emp-id" required placeholder="username" autocomplete="off">
                                                     <div class="form-control-feedback-icon">
@@ -176,7 +176,7 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label text-main">Password</label>
+                                                {{-- <label class="form-label text-main">Password</label> --}}
                                                 <div class="form-control-feedback form-control-feedback-start">
                                                     <input type="password" id="password" class="form-control @if ($errors->has('password')) is-invalid @endif" placeholder="password" name="password" required autocomplete="off">
                                                     <div class="form-control-feedback-icon" id="showPass">
