@@ -263,7 +263,7 @@ class CustomerController extends Controller
      public function public_customers_create()
     {
         //
-        $data['Insurance_types'] = InsuranceType::get();
+        $data['Insurance_types'] = InsuranceType::where('id', 1)->get();
         $data['identification_types'] = IdentificationType::get();
         $data['regions'] = Region::get();
         return view('customers.public_sector.create', $data);
