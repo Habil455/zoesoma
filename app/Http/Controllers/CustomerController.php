@@ -172,7 +172,7 @@ class CustomerController extends Controller
             $credentials->update();
 
 
-            $message = "Hi {$customer->first_name} {$customer->last_name}, your ZoeSoma account has been created. \nUsername: {$username},\nPassword: {$password}. \nPlease change your password after login www.zoesomaconsultancy.com/customer";
+            $message = "Hi {$customer->first_name} {$customer->last_name}, your ZoeSoma account has been created. \nUsername: {$username},\nPassword: {$password}. \nPlease change your password after login. \n link: www.zoesomaconsultancy.com/customer";
             // dd($message);
             $phone = $credentials->phone_number;
             $new_phone = str_replace(' ', '', $phone);
