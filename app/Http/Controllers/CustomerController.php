@@ -286,7 +286,8 @@ class CustomerController extends Controller
         $query = [
             'user'       => 'ZOESOMA',
             'pwd'        => 'p9s_e1_6',
-            'senderid'   => 'Mobishastra',
+            // 'senderid'   => 'Mobishastra',
+            'senderid'   => 'ZoesomaLtd',
             'mobileno'   => $phone,
             'msgtext'    => $message,
             'CountryCode'=> '+255',
