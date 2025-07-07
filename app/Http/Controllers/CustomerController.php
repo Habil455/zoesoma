@@ -285,7 +285,7 @@ class CustomerController extends Controller
         $baseUrl = 'https://mshastra.com/sendurl.aspx';
         $query = [
             'user'       => 'ZOESOMA',
-            'pwd'        => 'p9s_e1_6',
+            'pwd'        => 'zoe@1909',
             // 'senderid'   => 'Mobishastra',
             'senderid'   => 'ZoesomaLtd',
             'mobileno'   => $phone,
