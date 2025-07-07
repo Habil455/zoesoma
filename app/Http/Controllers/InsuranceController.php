@@ -206,7 +206,8 @@ class InsuranceController extends Controller
         // if($application->customer->type == 2){
         //     return back()->with('error', 'Public Sector Customers are not allowed to apply for Insurance');
         // }
-        if ($application->insuranceType != 4) { // if insurance type is not public
+
+        if ($application->insuranceType->id != 4) { // if insurance type is not public
             # code...
 
         $insurance_payment = InsurancePayment::where('application_id', $application->id)
