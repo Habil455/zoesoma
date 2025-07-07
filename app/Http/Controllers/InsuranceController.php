@@ -180,6 +180,21 @@ class InsuranceController extends Controller
 
     }
 
+    public function public_insurance_requests()
+    {
+
+        $data['application_requests'] = InsuranceApplication::where('insurance_type', 4)
+                                                                ->where('status', 2)->get();
+        $data['active_applications'] = InsuranceApplication::where('insurance_type', 4)
+                                                                ->where('status', 3)->get();
+        $data['total_pending_requests'] = InsuranceApplication::where('insurance_type', 4)
+                                                        ->where('status', 2)->count();
+        $data['total_active_applications'] = InsuranceApplication::where('insurance_type', 4)
+                                                        ->where('status', 3)->count();
+        return view('insurance.application.public_requests', $data);
+
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -191,6 +206,9 @@ class InsuranceController extends Controller
         // if($application->customer->type == 2){
         //     return back()->with('error', 'Public Sector Customers are not allowed to apply for Insurance');
         // }
+        if ($application->insuranceType != 4) { // if insurance type is not public
+            # code...
+
         $insurance_payment = InsurancePayment::where('application_id', $application->id)
             ->where('payment_type', 1)
             ->firstOrFail();
@@ -242,6 +260,7 @@ class InsuranceController extends Controller
                 'created_by' => $currentUser->id,
             ]);
         }
+    }
     }
 
         // Update application status

@@ -237,6 +237,14 @@
                                     <span>Biashara</span>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('customers.index') ? 'active' : null }}"
+                                    href="{{ route('public-insurances-requests') }}">
+                                    <i class="ph-layout"></i>
+                                    <span>Utumishi</span>
+                                </a>
+                            </li>
                         </ul>
 
 

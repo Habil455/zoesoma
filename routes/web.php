@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
         Route::get('education/requests', 'education_insurance_requests')->name('education_insurance-requests');
         Route::get('bodaboda/requests', 'bodaboda_insurance_requests')->name('bodaboda-insurances-requests');
         Route::get('business/requests', 'business_insurance_requests')->name('business-insurances-requests');
+        Route::get('public/requests', 'public_insurance_requests')->name('public-insurances-requests');
         Route::post('approve-education/requests', 'approve_insurance_requests')->name('approve-insurance-requests');
 
         Route::get('info/view/{id}', 'view_insurance_application')->name('insurance_info.view');
