@@ -79,8 +79,8 @@
                 <div class="d-flex align-items-center">
                     <i class=" ph-2x text-danger ms-3"></i>
                     <div class="flex-fill text-end">
-                        <h4 class="mb-0">389,438</h4>
-                        <span class="text-muted">Total Orders</span>
+                        <h4 class="mb-0">{{ $total_beneficiaries }}</h4>
+                        <span class="text-muted">Total Beneficiaries</span>
                     </div>
 
                 </div>

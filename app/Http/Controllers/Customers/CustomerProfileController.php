@@ -31,6 +31,9 @@ class CustomerProfileController extends Controller
                                     ->where('insurance_applications.customer_id', Auth::guard('customer')->id())
                                     ->whereMonth('insurance_payments.created_at', now()->month)
                                     ->sum('insurance_payments.payment_amount');
+        $data['total_beneficiaries'] = DB::table('customer_beneficiaries')
+                                    ->where('customer_id', Auth::guard('customer')->id())
+                                    ->count();
         return view('customers.dashboard', $data);
         // return 'Here is Habil';
     }
