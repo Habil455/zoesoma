@@ -21,13 +21,148 @@
             <img src="../../../assets/images/demo/users/face11.jpg" width="40" height="40" class="rounded-pill" alt="">
         </a> --}}
         <div class="flex-fill ms-3 d-flex align-items-center">
-            <span class="me-1">Welcome</span>
+            <span class="me-1">Welcome Back <b>{{ Auth::guard('customer')->user()->username }}</b></span>
             {{-- <div class="fw-semibold">{{ Auth::user()->fname }} {{ Auth::user()->lname . ' ' }} <span> </span></div>&nbsp;to ZoeSoma --}}
         </div>
         <div class="fs-sm fw-semibold lh-1 opacity-50 mt-1">
             {{ Auth::guard('customer')->user()->name }}
         </div>
     </div>
+    <div class="mb-3">
+        <h6 class="mb-0">Summary</h6>
+        {{-- <span class="text-muted">Boxes with icons</span> --}}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-body">
+                <div class="d-flex align-items-center">
+                    <i class="ph-identification-card ph-2x text-success me-3"></i>
+
+                    <div class="flex-fill text-end">
+                        <h4 class="mb-0">{{$total_applications}}</h4>
+                        <span class="text-muted">Total Applications</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-body">
+                <div class="d-flex align-items-center">
+                    <i class="ph-bank ph-2x text-indigo me-3"></i>
+
+                    <div class="flex-fill text-end">
+                        <h4 class="mb-0">{{ $total_payments }}</h4>
+                        <span class="text-muted">Total Payments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-body">
+                <div class="d-flex align-items-center">
+                    <i class="ph-wallet ph-2x text-primary ms-3"></i>
+
+                    <div class="flex-fill text-end">
+                        <h4 class="mb-0">{{ $total_monthly_payments }}</h4>
+                        <span class="text-muted">Monthly Payments</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-body">
+                <div class="d-flex align-items-center">
+                    <i class=" ph-2x text-danger ms-3"></i>
+                    <div class="flex-fill text-end">
+                        <h4 class="mb-0">389,438</h4>
+                        <span class="text-muted">Total Orders</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Subscription & Payment Dashboard --}}
+    <div class="row g-4 mb-4">
+        <!-- Insurance Coverage Info -->
+        <div class="col-md-4">
+            <div class="card border-info shadow-sm h-100">
+                <div class="card-header bg-info text-white d-flex align-items-center">
+                    <i class="ph-shield-check me-2"></i>
+                    <span>Insurance Coverage</span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="fw-semibold">Type:</span>
+                        <span class="float-end">Health, Education</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="fw-semibold">Benefits:</span>
+                        <ul class="mb-0 ps-3">
+                            <li>Hospitalization up to TZS 2,000,000</li>
+                            <li>School Fees up to TZS 1,000,000</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <span class="fw-semibold">Coverage Limits:</span>
+                        <span class="float-end">TZS 3,000,000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Subscription Status -->
+        <div class="col-md-4">
+            <div class="card border-success shadow-sm h-100">
+                <div class="card-header bg-success text-white d-flex align-items-center">
+                    <i class="ph-check-circle me-2"></i>
+                    <span>Subscription Status</span>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-success me-2">Active</span>
+                        {{-- <span class="badge bg-danger me-2">Inactive</span> --}}
+                        <span class="text-muted ms-auto">Paid: <strong>20</strong> days</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 66%;" role="progressbar"></div>
+                    </div>
+                    <small class="text-muted">10 days left this month</small>
+                </div>
+            </div>
+        </div>
+        <!-- Payment Summary -->
+
+        <div class="col-md-4">
+            <div class="card border-primary shadow-sm h-100">
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <i class="ph-credit-card me-2"></i>
+                    <span>Payment Summary</span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="fw-semibold">Total Paid (Monthly):</span>
+                        <span class="float-end text-success">TZS 50,000</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="fw-semibold">Total Paid (Yearly):</span>
+                        <span class="float-end text-success">TZS 600,000</span>
+                    </div>
+                    <div>
+                        <span class="fw-semibold">Remaining Balance:</span>
+                        <span class="float-end text-danger">TZS 10,000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{-- End Dashboard Cards --}}
 
     {{-- @can('view-management-dashboard')
         <div class="card p-2 text-center bordered-0 rounded-0 border-top border-top-width-3 border-top-black">
@@ -210,13 +345,15 @@
             var sampleChart2 = new Chart(ctx2, {
                 type: 'line',
                 data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September', 'October', 'November', 'December'],
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                        'September', 'October', 'November', 'December'
+                    ],
                     datasets: [{
                         label: 'Insured Clients',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1,
-                        data: [28, 48, 40, 19, 86, 27, 90, 45,67,12,65,78]
+                        data: [28, 48, 40, 19, 86, 27, 90, 45, 67, 12, 65, 78]
                     }]
                 },
                 options: {
