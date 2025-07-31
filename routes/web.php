@@ -109,6 +109,8 @@ Route::middleware('auth')->group(function () {
         Route::get('public/create', 'public_customers_create')->name('public.customer.create');
         Route::get('public/all_registration', 'all_public_sector_registrations')->name('public.customer.all_registration');
 
+        Route::get('resend_credentials/{id}', 'resend_credentials')->name('customer.resend_sms_credentials');
+
     });
 
     Route::prefix('commission/')->controller(CommissionController::class)->group(function () {

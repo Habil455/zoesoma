@@ -19,10 +19,10 @@
                 <h4 class="lead "> <i class="ph-users-four text-brand-secondary "></i> All Customers </h4>
 
                 {{-- @can('add-customer') --}}
-                    <a href="{{ route('customer.create') }}" class="btn btn-secondary btn-sm">
+                <a href="{{ route('customer.create') }}" class="btn btn-secondary btn-sm">
 
-                        <i class="ph-plus me-2"></i> Add Customer</a>
-                    </button>
+                    <i class="ph-plus me-2"></i> Add Customer</a>
+                </button>
                 {{-- @endcan --}}
             </div>
         </div>
@@ -39,41 +39,48 @@
                 <th>Name</th>
                 <th>Phone</th>
                 <th style="width: 15%">Location</th>
-                <th >Registered By</th>
+                <th>Registered By</th>
                 <th style="width: 20%">Date</th>
                 <th style="width: 16%">Options</th>
             </thead>
 
             <tbody>
                 @foreach ($all_customers as $customer)
-                @php
-                    $registered_by = App\Models\User::where('id', $customer->created_by)->first();
-                @endphp
-                <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>
-                        <b>{{$customer->first_name}} {{$customer->last_name}}</b> <br />
-                    </td>
-                    <td>{{$customer->phone_number}}</td>
-                    <td>{{$customer->region->name}}</td>
-                    <td>{{$registered_by->fname}} {{$registered_by->lname}}</td>
-                    <td>{{ $customer->created_at->format('d-M-Y') }}</td>
-                    <td>
-                        @can('view-customer-info')
-                        <a href="{{ route('customer.show', $customer->id) }}" title="View Info"
-                            class="btn btn-sm btn-secondary edit-button enabled">
-                            <i class="ph ph-info"></i>
-                        </a>
-                        @endcan
+                    @php
+                        $registered_by = App\Models\User::where('id', $customer->created_by)->first();
+                    @endphp
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>
+                            <b>{{ $customer->first_name }} {{ $customer->last_name }}</b> <br />
+                        </td>
+                        <td>{{ $customer->phone_number }}</td>
+                        <td>{{ $customer->region->name }}</td>
+                        <td>{{ $registered_by->fname }} {{ $registered_by->lname }}</td>
+                        <td>{{ $customer->created_at->format('d-M-Y') }}</td>
+                        <td>
+                            @can('view-customer-info')
+                                <a href="{{ route('customer.show', $customer->id) }}" title="View Info"
+                                    class="btn btn-sm btn-secondary edit-button enabled">
+                                    <i class="ph ph-info"></i>
+                                </a>
+                            @endcan
 
-                        @can('delete-customer')
-                        <button type="button" class="btn btn-sm btn-danger"
-                            onclick="deleteCustomer({{ $customer->id }})">
-                            Delete
-                        </button>
-                        @endcan
-                    </td>
-                </tr>
+                            @can('delete-customer')
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    onclick="deleteCustomer({{ $customer->id }})">
+                                    Delete
+                                </button>
+                            @endcan
+                            @can('resend-credentials')
+                                <button type="button" title="Resend Login Credentials"
+                                    onclick="resendCredentials({{ $customer->id }})"
+                                    class="btn btn-outline-warning btn-sm rounded-pill">
+                                    <i class="ph-repeat"></i>
+                                </button>
+                            @endcan
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -133,6 +140,79 @@
                             )
                         });
                 }
+            });
+        }
+
+
+        function resendCredentials(id) {
+            Swal.fire({
+                title: 'Resend Credentials?',
+                text: 'Are you sure you want to resend login credentials to this customer via SMS?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#ffc107',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="ph-paper-plane-tilt me-1"></i>Yes, Send!',
+                cancelButtonText: '<i class="ph-x me-1"></i>Cancel',
+                customClass: {
+                    popup: 'shadow-lg',
+                    confirmButton: 'btn-lg',
+                    cancelButton: 'btn-lg'
+                },
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch("{{ route('customer.resend_sms_credentials', ':id') }}".replace(':id', id), {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Credentials Sent!',
+                        text: 'Login credentials have been sent to the customer via SMS successfully.',
+                        icon: 'success',
+                        customClass: {
+                            popup: 'shadow-lg'
+                        },
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+
+                    // Add temporary success highlight to the row
+                    $(`tr:has(button[onclick="resendCredentials(${id})"])`).addClass('table-success').delay(2000)
+                        .queue(function() {
+                            $(this).removeClass('table-success').dequeue();
+                        });
+                } else if (result.isDenied) {
+                    Swal.fire({
+                        title: 'Failed!',
+                        text: 'Failed to send credentials. Please try again.',
+                        icon: 'error',
+                        customClass: {
+                            popup: 'shadow-lg'
+                        }
+                    });
+                }
+            }).catch((error) => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while sending credentials. Please try again.',
+                    icon: 'error',
+                    customClass: {
+                        popup: 'shadow-lg'
+                    }
+                });
             });
         }
     </script>
