@@ -125,7 +125,7 @@
             </div>
         </div>
         <!-- Subscription Status -->
-        <div class="col-md-4">
+        {{-- <div class="col-md-4">
             <div class="card border-success shadow-sm h-100">
                 <div class="card-header bg-success text-white d-flex align-items-center">
                     <i class="ph-check-circle me-2"></i>
@@ -134,7 +134,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <span class="badge bg-success me-2">Active</span>
-                        {{-- <span class="badge bg-danger me-2">Inactive</span> --}}
+                        {{-- <span class="badge bg-danger me-2">Inactive</span> -
                         <span class="text-muted ms-auto">Paid: <strong>20</strong> days</span>
                     </div>
                     <div class="progress mb-2" style="height: 8px;">
@@ -143,7 +143,7 @@
                     <small class="text-muted">10 days left this month</small>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- Payment Summary -->
 
         <div class="col-md-4">
