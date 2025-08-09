@@ -33,6 +33,9 @@
         {{-- <span class="text-muted">Boxes with icons</span> --}}
     </div>
 
+    @php
+        $auth_customer = Auth::guard('customer')->user();
+    @endphp
     <div class="row">
         <div class="col-sm-6 col-xl-3">
             <div class="card card-body">
@@ -40,7 +43,7 @@
                     <i class="ph-identification-card ph-2x text-success me-3"></i>
 
                     <div class="flex-fill text-end">
-                        <h4 class="mb-0">{{$total_applications}}</h4>
+                        <h4 class="mb-0">{{ $total_applications }}</h4>
                         <span class="text-muted">Total Applications</span>
                     </div>
                 </div>
@@ -75,16 +78,17 @@
         </div>
 
         <div class="col-sm-6 col-xl-3">
-            <div class="card card-body">
-                <div class="d-flex align-items-center">
-                    <i class=" ph-2x text-danger ms-3"></i>
-                    <div class="flex-fill text-end">
-                        <h4 class="mb-0">{{ $total_beneficiaries }}</h4>
-                        <span class="text-muted">Total Beneficiaries</span>
+            <a href="#" class="text-decoration-none text-reset" data-bs-toggle="modal" data-bs-target="#modal_large">
+                <div class="card card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="ph-2x text-danger ms-3"></i>
+                        <div class="flex-fill text-end">
+                            <h4 class="mb-0">{{ $total_beneficiaries }}</h4>
+                            <span class="text-muted">Total Beneficiaries</span>
+                        </div>
                     </div>
-
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -100,18 +104,22 @@
                 <div class="card-body">
                     <div class="mb-2">
                         <span class="fw-semibold">Type:</span>
-                        <span class="float-end">Health, Education</span>
+                        <span
+                            class="float-end">{{ $auth_customer->applications->InsuranceType->name }}</span>
                     </div>
                     <div class="mb-2">
                         <span class="fw-semibold">Benefits:</span>
                         <ul class="mb-0 ps-3">
-                            <li>Hospitalization up to TZS 2,000,000</li>
-                            <li>School Fees up to TZS 1,000,000</li>
+                            <li>Kumkatia mteja Bima ya Maisha kila mwaka</li>
+                            <li>Kupata Retirement Plan/Mpango pesa wa kustaafu kwa ajili ya uwekezaji kiasi cha shilingi
+                                milioni ishirini baada ya kuchangia kwa miaka kumi hadi 15 </li>
+                            <li>Mabadiliko ya umiliki wa bima (Insurance Transition) </li>
+                            <li>Uwezo wa kupata Mkopo wa riba ya 10% kuanzia laki moja hadi Milioni 4 </li>
                         </ul>
                     </div>
                     <div>
-                        <span class="fw-semibold">Coverage Limits:</span>
-                        <span class="float-end">TZS 3,000,000</span>
+                        <span class="fw-semibold">Coverage Limits (yearly):</span>
+                        <span class="float-end">TZS {{$auth_customer->applications->monthly_payment * 12}}</span>
                     </div>
                 </div>
             </div>
@@ -147,11 +155,11 @@
                 <div class="card-body">
                     <div class="mb-2">
                         <span class="fw-semibold">Total Paid (Monthly):</span>
-                        <span class="float-end text-success">TZS 50,000</span>
+                        <span class="float-end text-success">TZS {{$auth_customer->applications->monthly_payment}}</span>
                     </div>
                     <div class="mb-2">
                         <span class="fw-semibold">Total Paid (Yearly):</span>
-                        <span class="float-end text-success">TZS 600,000</span>
+                        <span class="float-end text-success">TZS {{$auth_customer->applications->monthly_payment * 12}}</span>
                     </div>
                     <div>
                         <span class="fw-semibold">Remaining Balance:</span>
@@ -306,6 +314,7 @@
             </div>
         </div>
     @endcan --}}
+    @include('customers.beneficiaries.show')
     <style>
         /* Ensure the charts adjust properly */
         canvas {

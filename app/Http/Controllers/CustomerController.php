@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Services\SysServices;
 
 class CustomerController extends Controller
 {
@@ -181,7 +182,7 @@ class CustomerController extends Controller
             // dd($message);
             $phone = $credentials->phone_number;
             $new_phone = str_replace(' ', '', $phone);
-            $this->sendSMS($new_phone, $message);
+            SysServices::sendSMS($new_phone, $message);
 
             DB::commit(); // ✅ All operations succeeded
 
@@ -274,34 +275,8 @@ class CustomerController extends Controller
         return view('customers.public_sector.create', $data);
     }
 
-
-    public static function sendSMS($phone, $message){
-
-        $baseUrl = 'https://mshastra.com/sendurl.aspx';
-        $query = [
-            'user'       => 'ZOESOMA',
-            'pwd'        => 'zoe@1909',
-            // 'senderid'   => 'Mobishastra',
-            'senderid'   => 'ZoesomaLtd',
-            'mobileno'   => $phone,
-            'msgtext'    => $message,
-            'CountryCode'=> '+255',
-        ];
-
-        // disable SSL verification if needed (equivalent to curl -k)
-        $response = Http::withOptions(['verify' => false])
-                        ->get($baseUrl, $query);
-
-        if ($response->successful()) {
-            return 'SMS sent: ' . $response->body();
-            dd($response->body());
-        }
-
-        return 'Error: ' . $response->status() . ' - ' . $response->body();
-    }
-
     public function resend_credentials($id)
-{
+    {
     try {
         // Find the customer
         $customer = Customer::find($id);
@@ -314,10 +289,19 @@ class CustomerController extends Controller
         }
 
         if (!$customer->username && !$customer->password) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Customer does not have assigned credentials'
-            ], 400);
+            $username = $customer->first_name.$id;
+            $password = Str::random(8);
+            $customer->update([
+                'username' => $username,
+                'password' => Hash::make($password)
+            ]);
+            return $this->resetCredentialsMessage(
+                $customer->first_name,
+                $customer->last_name,
+                $customer->phone_number,
+                $username,
+                $password
+            );
         }
 
         // Generate new password
@@ -325,34 +309,13 @@ class CustomerController extends Controller
         $customer->update([
             'password' => Hash::make($password) // Make sure to hash the password
         ]);
-
-        // Prepare SMS message
-        $message = "Ndugu {$customer->first_name} {$customer->last_name}, karibu Zoesoma Consultancy. \nAkaunti yako ni \nJina: {$customer->username},\nNeno la siri: {$password}. \nTafadhali badili password baada ya kujiunga kupitia link hii: \n www.zoesomaconsultancy.com/customer";
-
-        // Clean phone number
-        $phone = str_replace(' ', '', $customer->phone_number);
-
-        // Send SMS
-        $smsResult = $this->sendSMS($phone, $message);
-
-        // Check if SMS was sent successfully (adjust this based on your sendSMS method return)
-        if ($smsResult) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Login credentials have been sent successfully via SMS',
-                'data' => [
-                    'customer_name' => $customer->first_name . ' ' . $customer->last_name,
-                    'phone' => $phone,
-                    'sent_at' => now()->format('Y-m-d H:i:s')
-                ]
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to send SMS. Please try again.'
-            ], 500);
-        }
-
+         return $this->resetCredentialsMessage(
+                    $customer->first_name,
+                    $customer->last_name,
+                    $customer->phone_number,
+                    $customer->username,
+                    $password
+                );
     } catch (\Exception $e) {
         // Log the error for debugging
         \Log::error('Failed to resend credentials: ' . $e->getMessage(), [
@@ -367,4 +330,33 @@ class CustomerController extends Controller
     }
 }
 
+    public function resetCredentialsMessage($firstname, $lastname, $phone_number, $username, $password)
+    {
+        // Prepare SMS message
+        $message = "Ndugu {$firstname} {$lastname}, karibu Zoesoma Consultancy. \nAkaunti yako imeresetiwa kwa \nJina: {$username},\nNeno la siri: {$password}. \nTafadhali badili password baada ya kujiunga kupitia link hii: \n www.zoesomaconsultancy.com/customer";
+
+        // Clean phone number
+        $phone = str_replace(' ', '', $phone_number);
+
+        // Send SMS
+        $smsResult = SysServices::sendSMS($phone, $message);
+
+        // Check if SMS was sent successfully (adjust this based on your sendSMS method return)
+        if ($smsResult) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Login credentials have been sent successfully via SMS',
+                'data' => [
+                    'customer_name' => $firstname . ' ' . $lastname,
+                    'phone' => $phone,
+                    'sent_at' => now()->format('Y-m-d H:i:s')
+                ]
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send SMS. Please try again.'
+            ], 500);
+        }
+    }
 }

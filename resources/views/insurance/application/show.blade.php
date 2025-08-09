@@ -94,25 +94,6 @@
                             <i class="text-bold"></i> Tsh {{ $payments->payment_amount }}
                         </p>
                     </div>
-
-
-                    {{-- <div class="col-12 col-md-12">
-                        <hr>
-                        <small><b><i class="ph-cash text-brand-secondary"></i> PAYMENTS</b></small>
-                        @if (session('error'))
-                            <div class="alert alert-danger mt-1 mb-1 col-10 mx-auto" role="alert">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-
-                        <div class="col-md-12">
-                            <a {{-- href="{{ url('/trips/truck-allocation/' . base64_encode($trip->allocation_id)) }}"  class="btn btn-perfrom btn-sm float-end mx-2">
-                                <i class="ph ph-plus me-2"></i> Payment
-                            </a>
-                        </div>
-                    </div> --}}
-
-
                     <hr>
 
                     {{-- For Trip Trucks --}}
@@ -139,11 +120,6 @@
                                         $end_date = \Carbon\Carbon::parse($item->end_date);
                                         $start_date = \Carbon\Carbon::parse($item->from_date);
                                         $duration = $end_date->diffInDays($start_date);
-                                            // $trailers = App\Models\TrailerAssignment::where(
-                                            //     'truck_id',
-                                            //     $item->truck_id,
-                                            // )->first();
-                                            // $drivers = App\Models\User::where('position', '9')->get();
                                         @endphp
                                         <tr>
                                             <td>{{ $i++ }}</td>

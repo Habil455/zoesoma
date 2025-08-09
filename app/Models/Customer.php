@@ -31,4 +31,9 @@ class Customer extends Authenticatable
     {
         return $this->belongsTo(Overseer::class, 'id', 'customer_id');
     }
+
+    public function applications()
+    {
+        return $this->hasOne(InsuranceApplication::class, 'customer_id', 'id');
+    }
 }

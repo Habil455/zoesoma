@@ -42,7 +42,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->url('/dashboard') ? 'active' : null }}"
                         {{-- href="{{ url('/dashboard') }}"> --}}
-                        href="#">
+                        href="{{route('customer.dashboard')}}">
                         <i class="ph-house"></i>
                         <span>Dashboard</span>
                     </a>
@@ -57,7 +57,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('payments*') ? 'active' : '' }}" href="#">
+                    <a class="nav-link {{ request()->is('payments*') ? 'active' : '' }}" href="{{route('customer.payments.index')}}">
                         <i class="ph-credit-card"></i>
                         <span>Payment History</span>
                     </a>

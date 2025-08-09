@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customers;
 
 use App\Http\Controllers\Controller;
+use App\Models\CustomerBeneficiary;
 use App\Models\InsuranceApplication;
 use App\Models\InsurancePayment;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class CustomerProfileController extends Controller
     {
         //
         $data['total_applications'] = InsuranceApplication::where('customer_id', Auth::guard('customer')->id())->count();
+        $data['beneficiaries'] = CustomerBeneficiary::where('customer_id', Auth::guard('customer')->id())->get();
         $data['total_payments'] = DB::table('insurance_payments')
                                     ->join('insurance_applications', 'insurance_payments.application_id', '=', 'insurance_applications.id')
                                     ->where('insurance_applications.customer_id', Auth::guard('customer')->id())
