@@ -335,65 +335,57 @@ class InsuranceController extends Controller
             $insurance_payment->status = 1;
             $insurance_payment->save();
 
-            if($insurance_payment){
+        //     if($insurance_payment){
 
-                // checking if the commission can be paid
-                $total_payment = InsurancePayment::where('application_id', $application->id)
-                    ->where('payment_type', 2)
-                    ->whereMonth('payment_date', Carbon::now()->month)
-                    ->sum('payment_amount');
-                if($total_payment >= $payment_type->amount){
-                    $commissions_configs = CommissionConfiguration::where('payment_type_id', 2)
-                        ->with('roles')
-                        ->get();
+        //         // checking if the commission can be paid
+        //         $total_payment = InsurancePayment::where('application_id', $application->id)
+        //             ->where('payment_type', 2)
+        //             ->whereMonth('payment_date', Carbon::now()->month)
+        //             ->sum('payment_amount');
+        //         if($total_payment >= $payment_type->amount){
+        //             $commissions_configs = CommissionConfiguration::where('payment_type_id', 2)
+        //                 ->with('roles')
+        //                 ->get();
 
-                    $creator_role_id = $application->users->roles->first()->id;
+        //             $creator_role_id = $application->users->roles->first()->id;
 
-                    $currentUser = Auth::user();
-                    $currentRoleName = $currentUser->roles->first()->name;
+        //             $currentUser = Auth::user();
+        //             $currentRoleName = $currentUser->roles->first()->name;
 
-                    foreach ($commissions_configs as $commission) {
-                        if ($creator_role_id == 2) {
-                            // Application created by Supervisor
-                            $user_id = $application->created_by;
-                        } elseif ($creator_role_id == 3) {
-                            // Application created by Freelancer
-                            if ($commission->roles->id == 3) {
-                                $user_id = $application->customer->created_by; // freelancer
-                            } else {
-                                $freelancer = User::findOrFail($application->customer->created_by);
-                                $user_id = $freelancer->added_by; // supervisor
-                            }
-                        } else {
-                            continue; // Skip if neither freelancer nor supervisor
-                        }
+        //             foreach ($commissions_configs as $commission) {
+        //                 if ($creator_role_id == 2) {
+        //                     // Application created by Supervisor
+        //                     $user_id = $application->created_by;
+        //                 } elseif ($creator_role_id == 3) {
+        //                     // Application created by Freelancer
+        //                     if ($commission->roles->id == 3) {
+        //                         $user_id = $application->customer->created_by; // freelancer
+        //                     } else {
+        //                         $freelancer = User::findOrFail($application->customer->created_by);
+        //                         $user_id = $freelancer->added_by; // supervisor
+        //                     }
+        //                 } else {
+        //                     continue; // Skip if neither freelancer nor supervisor
+        //                 }
 
-                        // Create commission payment
-                        $commission_payment = CommissionPayment::create([
-                            'payment_id' => $insurance_payment->id,
-                            'configuration_id' => $commission->id,
-                            'user_id' => $user_id,
-                            'approved_by' => $currentUser->id,
-                            'amount' => $commission->amount,
-                            'payment_date' => now(),
-                            'status' => 1,
-                        ]);
+        //                 // Create commission payment
+        //                 $commission_payment = CommissionPayment::create([
+        //                     'payment_id' => $insurance_payment->id,
+        //                     'configuration_id' => $commission->id,
+        //                     'user_id' => $user_id,
+        //                     'approved_by' => $currentUser->id,
+        //                     'amount' => $commission->amount,
+        //                     'payment_date' => now(),
+        //                     'status' => 1,
+        //                 ]);
+        //             }
 
-                        // Create remark
-                        // CommissionPaymentRemark::create([
-                        //     'commission_payment_id' => $commission_payment->id,
-                        //     'remarked_by' => $currentRoleName,
-                        //     'remark' => 'Monthly Payment',
-                        //     'created_by' => $currentUser->id,
-                        // ]);
-                    }
-
-                    return back()->with('success', 'Succeeded to Pay the Insurance and Commission to Users');
-                }
+        //             return back()->with('success', 'Succeeded to Pay the Insurance and Commission to Users');
+        //         }
 
 
                 return back()->with('success', 'Succeeded to Pay the Insurance');
-            }
+            // }
         }
 
     }
