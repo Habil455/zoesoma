@@ -53,6 +53,7 @@
                             <th>No.</th>
                             <th>Name</th>
                             <th>Phone</th>
+                            <th>Username</th>
                             <th>Location</th>
                             <th>Registered By</th>
                             <th>Date</th>
@@ -69,6 +70,7 @@
                                     <td>
                                         <b>{{ $customer->first_name }} {{ $customer->last_name }}</b> <br />
                                     </td>
+                                    <td>{{ $customer->username ?? 'NOT AVAILABLE' }}</td>
                                     <td>{{ $customer->phone_number }}</td>
                                     <td>{{ $customer->region->name }}</td>
                                     <td>{{ $registered_by->fname }} {{ $registered_by->lname }}</td>
