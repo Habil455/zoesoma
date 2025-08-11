@@ -130,7 +130,7 @@
                                                 <small> {{ $item->truck->type->name }}</small> --}}
                                             </td>
                                             <td hidden></td>
-                                            <td>{{ $duration ?? 'N/A' }}</td>
+                                            <td>{{ $duration.' day(s)' ?? 'N/A' }}</td>
                                             <td>
                                                 {{-- <a href="{{ url('' . base64_encode($item->id)) }}" --}}
                                                 <a href=""
