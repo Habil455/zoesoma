@@ -34,7 +34,21 @@
     </div>
 
     @php
+        $current_yr_payments = 0;
         $auth_customer = Auth::guard('customer')->user();
+        $monthly_payment = $auth_customer->applications->monthly_payment;
+        $yearly_payments = $monthly_payment * 12;
+        $currentYear = now()->year;
+        $applications = App\Models\InsuranceApplication::where('customer_id', $auth_customer->id)->get();
+
+        foreach ($applications as $application) {
+            $payment = App\Models\InsurancePayment::where('application_id', 95)
+                ->whereYear('payment_date', $currentYear) // use your actual date column
+                ->sum('payment_amount');
+
+            $current_yr_payments += $payment;
+        }
+
     @endphp
     <div class="row">
         <div class="col-sm-6 col-xl-3">
@@ -69,7 +83,7 @@
                     <i class="ph-wallet ph-2x text-primary ms-3"></i>
 
                     <div class="flex-fill text-end">
-                        <h4 class="mb-0">{{ $total_monthly_payments }}</h4>
+                        <h4 class="mb-0">{{ $monthly_payment }}</h4>
                         <span class="text-muted">Monthly Payments</span>
                     </div>
 
@@ -104,8 +118,7 @@
                 <div class="card-body">
                     <div class="mb-2">
                         <span class="fw-semibold">Type:</span>
-                        <span
-                            class="float-end">{{ $auth_customer->applications->InsuranceType->name }}</span>
+                        <span class="float-end">{{ $auth_customer->applications->InsuranceType->name }}</span>
                     </div>
                     <div class="mb-2">
                         <span class="fw-semibold">Benefits:</span>
@@ -119,7 +132,7 @@
                     </div>
                     <div>
                         <span class="fw-semibold">Coverage Limits (yearly):</span>
-                        <span class="float-end">TZS {{$auth_customer->applications->monthly_payment * 12}}</span>
+                        <span class="float-end">TZS {{ $auth_customer->applications->monthly_payment * 12 }}</span>
                     </div>
                 </div>
             </div>
@@ -154,16 +167,17 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-2">
-                        <span class="fw-semibold">Total Paid (Monthly):</span>
-                        <span class="float-end text-success">TZS {{$auth_customer->applications->monthly_payment}}</span>
+                        <span class="fw-semibold">Total Paid (currently):</span>
+                        <span class="float-end text-success">TZS {{ number_format($current_yr_payments, 2) }}</span>
                     </div>
                     <div class="mb-2">
                         <span class="fw-semibold">Total Paid (Yearly):</span>
-                        <span class="float-end text-success">TZS {{$auth_customer->applications->monthly_payment * 12}}</span>
+                        <span class="float-end text-success">TZS {{ number_format($yearly_payments, 2) }}</span>
                     </div>
                     <div>
                         <span class="fw-semibold">Remaining Balance:</span>
-                        <span class="float-end text-danger">TZS 10,000</span>
+                        <span class="float-end text-danger">TZS
+                            {{ number_format($yearly_payments - $current_yr_payments, 2) }}</span>
                     </div>
                 </div>
             </div>
