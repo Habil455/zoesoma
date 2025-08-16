@@ -102,7 +102,7 @@
                         </li>
                         <li class="list-group-item d-flex">
                             <span class="fw-semibold">Attachment:</span>
-                            <a class="ms-auto" data-bs-popup="tooltip"
+                            <a class="ms-auto file_attachment" data-bs-popup="tooltip"
                                 title="download" data-attachment="{{ $item->attachment }}" id="attachment" target="_blank"></a>
                             {{-- <a id="attachment"></div> --}}
                         </li>
@@ -241,6 +241,7 @@
             var received_by = $(this).data('received_by');
             var payment_type = $(this).data('payment_type');
             var attachment = $(this).data('attachment');
+            var file_attach = $(this).data('attachment');
             var amount = $(this).data('amount');
 
 
@@ -249,13 +250,14 @@
             $('#payment_type').html(payment_type);
             $('#attachment').html(attachment);
             $('#paid_amount').html(amount);
+
+            var file = $(this).data('attachment');
+            var url = '/storage/attachments/' + file_attach;
+
+           $('.file_attachment').text(file)        // show the filename inside the <a>
+                            .attr('href', url) // make it clickable
+                            .attr('download', file);
         });
 
-        var file = $(this).data('attachment');
-        var url = '/storage/attachments/' + file;
-
-       $('#attachment').text(file)        // show the filename inside the <a>
-                        .attr('href', url) // make it clickable
-                        .attr('download', file);
     </script>
 @endsection
