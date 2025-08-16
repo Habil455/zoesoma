@@ -45,18 +45,25 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->created_at->format('Y-m-d') }}</td>
-                            <td>{{$item->paymentType->name}}</td>
+                            <td>{{ $item->paymentType->name }}</td>
                             <td>
                                 <small>Tsh</small> {{ $item->payment_amount }}
                                 {{-- <br>
                                                 <small> {{ $item->truck->type->name }}</small> --}}
                             </td>
                             <td hidden></td>
-                            <td>{{$item->user->fname}} {{$item->user->lname}}</td>
+                            <td>{{ $item->user->fname }} {{ $item->user->lname }}</td>
                             <td>
-                                <a href="" title="View Info" class="btn btn-sm btn-primary">
+                                <button class="btn btn-sm btn-primary view-payment" class="btn btn-primary"
+                                    data-bs-popup="tooltip" title="View Payment " data-bs-placement="auto"
+                                    data-bs-toggle="modal" data-bs-target="#offload-modal" data-id="{{ $item->id }}"
+                                    data-received_by ="{{ $item->user->fname }} {{ $item->user->lname }}"
+                                    data-payment_type="{{ $item->paymentType->name }}"
+                                    data-attachment={{ $item->attachment }} data-created_at="{{ $item->created_at }}"
+                                    data-amount="{{ $item->payment_amount }}">
                                     <i class="ph-info"></i>
-                                </a>
+
+                                </button>
                             </td>
                         @empty
                     @endforelse
@@ -64,6 +71,104 @@
 
             </table>
         </div>
+
+        <div class="modal fade" id="offload-modal" tabindex="-1" role="dialog" aria-labelledby="edit-modal-label">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Payment Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    {{-- {{ route('flex.offload-truck-allocation') }} --}}
+
+                    <ul class="list-group list-group-flush border-top">
+
+                        <li class="list-group-item d-flex">
+                            <span class="fw-semibold">Date:</span>
+                            <div class="ms-auto" id="received-date"></div>
+                        </li>
+
+                        <li class="list-group-item d-flex">
+                            <span class="fw-semibold">Payment Type:</span>
+                            <div class="ms-auto" id="payment_type"></div>
+                        </li>
+                        <li class="list-group-item d-flex">
+                            <span class="fw-semibold">Amount:</span>
+                            <div class="ms-auto" id="paid_amount"><a href="#"></a></div>
+                        </li>
+                        <li class="list-group-item d-flex">
+                            <span class="fw-semibold">Received By:</span>
+                            <div class="ms-auto" id="receiver"></div>
+                        </li>
+                        <li class="list-group-item d-flex">
+                            <span class="fw-semibold">Attachment:</span>
+                            <a class="ms-auto" data-bs-popup="tooltip"
+                                title="download" data-attachment="{{ $item->attachment }}" id="attachment" target="_blank"></a>
+                            {{-- <a id="attachment"></div> --}}
+                        </li>
+
+                        {{-- <li class="list-group-item d-flex">
+                            <span class="fw-semibold">Registered By:</span>
+                            <div class="fs-base text-uppercase text-muted ms-auto"><samp><samp></div>
+                        </li>
+                        <li class="list-group-item d-flex">
+                            <span class="fw-semibold">Created:</span>
+                            <div class="ms-auto"></div>
+                        </li> --}}
+                    </ul>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    {{-- <form method="POST" id="offloading_form" action=""
+                            onsubmit="return validateForm()" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-header">
+                                <h6 class="modal-title lead" id="edit-modal-label">Offload Truck : <input type="text"
+                                        id="edit-name1" disabled></h6>
+                                <button type="button" class="btn-close btn-danger text-light" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                    {{-- <span aria-hidden="true">&times;</span> -
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="id" id="edit-id1">
+
+                                <div class="form-group">
+                                    <div class="col-12 mb-1">
+                                        <label for="">Loaded: <input type="text" id="edit-loaded" disabled></label>
+                                        <hr>
+                                    </div>
+                                    <div class="col-12 mb-2">
+
+                                        <label for="">Offloading Date</label>
+                                        <input type="date" required name="offloading_date" id="edit-odate"
+                                            placeholder="Enter Quantity" class="form-control">
+
+                                        <label for="">Quantity</label>
+                                        <input type="number" min="0" step="any" required name="quantity"
+                                            id="edit-quantity1" placeholder="Enter Quantity" class="form-control">
+
+                                        <input type="hidden" required name="truck_id" id="edit-truck1" class="form-control">
+
+                                        <input type="hidden" required name="allocation_id" id="edit-description1"
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <label for="">POD</label>
+                                        <input type="file" name="pod" class="form-control" id="pod">
+                                        <p id="fileError" style="color: red;"></p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+
+                                    <button type="submit" id="offloading_btn" class="btn btn-main">Offload Truck</button>
+                                </div>
+                        </form> --}}
+                </div>
+            </div>
+        </div>
+
     </div>
     <style>
         /* Ensure the charts adjust properly */
@@ -126,5 +231,31 @@
                 }
             });
         });
+
+
+
+        $(document).on('click', '.view-payment', function() {
+            var date = $(this).data('created_at');
+            console.log(date);
+
+            var received_by = $(this).data('received_by');
+            var payment_type = $(this).data('payment_type');
+            var attachment = $(this).data('attachment');
+            var amount = $(this).data('amount');
+
+
+            $('#received-date').html(date);
+            $('#receiver').html(received_by);
+            $('#payment_type').html(payment_type);
+            $('#attachment').html(attachment);
+            $('#paid_amount').html(amount);
+        });
+
+        var file = $(this).data('attachment');
+        var url = '/storage/attachments/' + file;
+
+       $('#attachment').text(file)        // show the filename inside the <a>
+                        .attr('href', url) // make it clickable
+                        .attr('download', file);
     </script>
 @endsection

@@ -308,6 +308,9 @@ class InsuranceController extends Controller
             $endDate = now();
         }
 
+        if (!$request->hasfile('attachment')) {
+            return back()->with('error', 'Payment needs to have evidence');
+         }
         $new_startDate = Carbon::parse($startDate);
         $new_endDate = Carbon::parse($endDate);
 
@@ -333,6 +336,11 @@ class InsuranceController extends Controller
             $insurance_payment->created_by = Auth::user()->id;
             $insurance_payment->payment_type = $payment_type->id;
             $insurance_payment->status = 1;
+
+            $attachmentName = $request->attachment->hashName();
+            $request->attachment->move(public_path('storage/attachments'), $attachmentName);
+
+            $insurance_payment->attachment = $attachmentName;
             $insurance_payment->save();
 
         //     if($insurance_payment){
